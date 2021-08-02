@@ -6,6 +6,6 @@ COPY . .
 RUN go build -o server .
 
 FROM alpine:3.12
-EXPOSE 8000
+EXPOSE 8080
 COPY --from=build /go/src/github.com/org/repo/server /server
 CMD ["/server"]
