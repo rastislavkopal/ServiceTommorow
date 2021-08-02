@@ -1,0 +1,40 @@
+version: "3.3"
+
+services:
+  backend:
+    build: backend
+    secrets:
+      - db-password
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.3
+    restart: always
+    # healthcheck:
+    #   test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+    #   interval: 3s
+    #   retries: 5
+    #   start_period: 30s
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PWD}
+      MARIADB_INITDB_SKIP_TZINFO: true
+    expose:
+      - 3306
+
+  proxy:
+    build: proxy
+    ports:
+      - 80:80
+    depends_on: 
+      - backend
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    file: db/password.txt
