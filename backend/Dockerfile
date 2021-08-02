@@ -1,4 +1,5 @@
 FROM golang:1.13-alpine AS build
+RUN apk add build-base
 WORKDIR /go/src/github.com/org/repo
 COPY . .
 

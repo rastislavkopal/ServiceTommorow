@@ -2,28 +2,24 @@ version: "3.3"
 
 services:
   backend:
-    build: backend
+    build:
+      context: ./backend
     secrets:
       - db-password
     depends_on:
-      - db
+      - mariadb
 
-  db:
-    image: mariadb:10.3
-    restart: always
-    # healthcheck:
-    #   test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
-    #   interval: 3s
-    #   retries: 5
-    #   start_period: 30s
-    volumes:
+  mariadb:
+    container_name: ${APP_NAME}-db
+    image: "mariadb:${MARIADB_VERSION}"
+    restart: 'always'
+    volumes: 
       - db-data:/var/lib/mysql
     environment:
-      MARIADB_DATABASE: ${DB_DATABASE}
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PWD}
-      MARIADB_INITDB_SKIP_TZINFO: true
-    expose:
-      - 3306
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
 
   proxy:
     build: proxy
@@ -37,4 +33,4 @@ volumes:
 
 secrets:
   db-password:
-    file: db/password.txt
+    file: mariadb/password.txt
