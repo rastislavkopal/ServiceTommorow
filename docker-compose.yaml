@@ -2,12 +2,15 @@ version: "3.3"
 
 services:
   backend:
+    container_name: ${APP_NAME}-backend
     build:
       context: ./backend
     secrets:
       - db-password
     depends_on:
       - mariadb
+    ports:
+      - 8080:8080
 
   web:
     build:
@@ -26,9 +29,14 @@ services:
       MYSQL_DATABASE: "${MYSQL_DATABASE}"
       MYSQL_USER: "${MYSQL_USER}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_INITDB_SKIP_TZINFO: 1
+    ports:
+      - 3306:3306
 
   proxy:
-    build: proxy
+    container_name: ${APP_NAME}-nginx
+    build:
+      context: ./proxy
     ports:
       - 80:80
     depends_on: 
@@ -39,4 +47,4 @@ volumes:
 
 secrets:
   db-password:
-    file: mariadb/password.txt
+    file: db/password.txt
