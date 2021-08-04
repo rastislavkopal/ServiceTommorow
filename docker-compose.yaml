@@ -7,6 +7,8 @@ services:
       context: ./backend
     secrets:
       - db-password
+    env_file:
+      - ./.env
     depends_on:
       - mariadb
     ports:
@@ -16,6 +18,8 @@ services:
     container_name: ${APP_NAME}-db
     image: "mariadb:${MARIADB_VERSION}"
     restart: 'always'
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent", "--password", "${MYSQL_ROOT_PASSWORD}"]
     volumes: 
       - db-data:/var/lib/mysql
     environment:
