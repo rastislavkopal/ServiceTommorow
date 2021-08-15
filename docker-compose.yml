@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.6
+    container_name: mariadb
+    restart: always
+    networks:
+      - locanet
+    environment:
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_USER=${DB_USER}"
+      - "MYSQL_PASSWORD=${DB_PASSWORD}"
+      - "MYSQL_DATABASE=${DB_NAME}"   
+      - "MYSQL_INITDB_SKIP_TZINFO=1"
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+
+  api:
+    build:
+      context: ./backend/
+    container_name: service_tommorow_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./backend/:/app"
+    depends_on:
+      - db
+    links:
+      - "db:database"
+    networks:
+      - locanet
+    env_file: .env
+    entrypoint: ["/app/wait-for.sh", "db:3306", "--"]
+    command: ["CompileDaemon", "--build", "go build main.go", "--command", "./main"]
+
+networks:
+    locanet:
+        driver: bridge
