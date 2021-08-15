@@ -24,12 +24,13 @@ func NewUserRoute(
 
 //Setup -> setups new choice Routes
 func (u UserRoute) Setup() {
-	post := u.Handler.Gin.Group("/users")
+	user := u.Handler.Gin.Group("/users")
 	{
-		post.GET("/", u.Controller.GetUsers)
-		post.POST("/", u.Controller.AddUser)
-		post.GET("/:id", u.Controller.GetUser)
-		post.DELETE("/:id", u.Controller.DeleteUser)
-		post.PUT("/:id", u.Controller.UpdateUser)
+		user.GET("/", u.Controller.GetUsers)
+		user.POST("/register", u.Controller.RegisterUser)
+		user.POST("/", u.Controller.AddUser)
+		user.GET("/:id", u.Controller.GetUser)
+		user.DELETE("/:id", u.Controller.DeleteUser)
+		user.PUT("/:id", u.Controller.UpdateUser)
 	}
 }

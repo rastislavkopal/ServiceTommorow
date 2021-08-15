@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     image: mariadb:10.6
-    container_name: mariadb
+    container_name: ${APP_NAME}-db
     restart: always
     networks:
       - locanet
@@ -21,7 +21,7 @@ services:
   api:
     build:
       context: ./backend/
-    container_name: service_tommorow_api
+    container_name: ${APP_NAME}-api
     ports:
       - "8000:8000"
     volumes:

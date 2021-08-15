@@ -22,6 +22,28 @@ func NewUserController(s service.UserService) UserController {
 	}
 }
 
+func (u UserController) RegisterUser(ctx *gin.Context) {
+	var user models.User
+	ctx.ShouldBindJSON(&user)
+
+	if user.Email == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Email is required")
+		return
+	}
+	if user.Password == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Password is required")
+		return
+	}
+
+	err := u.service.Register(user)
+
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create user")
+		return
+	}
+	util.SuccessJSON(ctx, http.StatusCreated, "Successfully Registered User")
+}
+
 // GetUsers : GetUsers controller
 func (u UserController) GetUsers(ctx *gin.Context) {
 	var users models.User

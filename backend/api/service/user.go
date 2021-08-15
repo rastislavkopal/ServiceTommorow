@@ -3,6 +3,8 @@ package service
 import (
 	"backend/api/repository"
 	"backend/models"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // UserService UserService struct
@@ -15,6 +17,31 @@ func NewUserService(r repository.UserRepository) UserService {
 	return UserService{
 		repository: r,
 	}
+}
+
+// hashPassword -> returns hashed password
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+// checkPasswordHash -> func to check hashed pwd
+// compares password & hashed pwd
+func checkPasswordHash(password string, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+// Register -> hashes password and calls user repo save method
+func (u UserService) Register(user models.User) error {
+	hashedPwd, err := hashPassword(user.Password)
+
+	if err != nil {
+		return err
+	}
+
+	user.Password = hashedPwd
+	return u.repository.Save(user)
 }
 
 // Save -> calls user repository save method

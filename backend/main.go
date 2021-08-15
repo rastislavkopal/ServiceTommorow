@@ -7,9 +7,11 @@ import (
 	"backend/api/service"
 	"backend/common"
 	"backend/models"
+	"os"
 )
 
 func init() {
+	// not needed when loaded env vars from docker-compose
 	// common.LoadEnv()
 }
 
@@ -23,6 +25,6 @@ func main() {
 	userRoute := routes.NewUserRoute(userController, router)    // user routes are initialized
 	userRoute.Setup()                                           // user routes are being setup
 
-	db.DB.AutoMigrate(&models.User{}) // migrating Post model to datbase table
-	router.Gin.Run(":8000")           //server started on 8000 port
+	db.DB.AutoMigrate(&models.User{})              // migrating Post model to datbase table
+	router.Gin.Run(":" + os.Getenv("SERVER_PORT")) //server started on 8000 port
 }
