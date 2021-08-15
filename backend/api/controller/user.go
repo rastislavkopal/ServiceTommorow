@@ -22,6 +22,15 @@ func NewUserController(s service.UserService) UserController {
 	}
 }
 
+// RegisterUser -> Register new user
+// @Summary Register new user based on paramters
+// @Description Register new user
+// @Tags Users
+// @Accept json
+// @Param user body models.User true "User Data"
+// @Success 200 {object} object
+// @Failure 400,500 {object} object
+// @Router / [post]
 func (u UserController) RegisterUser(ctx *gin.Context) {
 	var user models.User
 	ctx.ShouldBindJSON(&user)
@@ -45,6 +54,12 @@ func (u UserController) RegisterUser(ctx *gin.Context) {
 }
 
 // GetUsers : GetUsers controller
+// @Summary Get list of users
+// @Description get all users
+// @Tags Users
+// @Success 200 {array} models.User
+// @Failure 404 {object} object
+// @Router / [get]
 func (u UserController) GetUsers(ctx *gin.Context) {
 	var users models.User
 
@@ -93,7 +108,14 @@ func (u *UserController) AddUser(ctx *gin.Context) {
 	util.SuccessJSON(ctx, http.StatusCreated, "Successfully Created User")
 }
 
-//GetUser : get user by id
+// GetUser -> get user by id
+// @Summary Get one user
+// @Description get user by ID
+// @Tags Users
+// @Param id path string true "User ID"
+// @Success 200 {object} models.User
+// @Failure 400,404 {object} object
+// @Router /{id} [get]
 func (u *UserController) GetUser(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to int64
