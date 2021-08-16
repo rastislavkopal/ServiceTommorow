@@ -3,7 +3,11 @@ package service
 import (
 	"backend/api/repository"
 	"backend/models"
+	"errors"
+	"os"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -34,14 +38,40 @@ func checkPasswordHash(password string, hash string) bool {
 
 // Register -> hashes password and calls user repo save method
 func (u UserService) Register(user models.User) error {
-	hashedPwd, err := hashPassword(user.Password)
+	hashedPwd, err := hashPassword(user.PasswordHash)
 
 	if err != nil {
 		return err
 	}
 
-	user.Password = hashedPwd
+	user.PasswordHash = hashedPwd
 	return u.repository.Save(user)
+}
+
+func (u UserService) Login(user models.User) (string, error) {
+	dbUser, err := u.repository.FindByEmail(user)
+
+	if err != nil {
+		return "", errors.New("User with email " + user.Email + " does not exists")
+	}
+
+	if checkPasswordHash(user.PasswordHash, dbUser.PasswordHash) == false {
+		return "", errors.New("Incorrect password")
+	}
+
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["user_id"] = dbUser.ID
+	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // Save -> calls user repository save method

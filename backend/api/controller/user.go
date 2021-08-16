@@ -28,7 +28,7 @@ func NewUserController(s service.UserService) UserController {
 // @Tags Users
 // @Accept json
 // @Param user body models.User true "User Data"
-// @Success 200 {object} object
+// @Success 201 {object} object
 // @Failure 400,500 {object} object
 // @Router / [post]
 func (u UserController) RegisterUser(ctx *gin.Context) {
@@ -39,7 +39,7 @@ func (u UserController) RegisterUser(ctx *gin.Context) {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Email is required")
 		return
 	}
-	if user.Password == "" {
+	if user.PasswordHash == "" {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Password is required")
 		return
 	}
@@ -51,6 +51,43 @@ func (u UserController) RegisterUser(ctx *gin.Context) {
 		return
 	}
 	util.SuccessJSON(ctx, http.StatusCreated, "Successfully Registered User")
+}
+
+// LoginUsersterUser -> Login user with credentials
+// @Summary Login user based on body params - email and password
+// @Description Login user and returns BEARER auth token
+// @Tags Users
+// @Accept json
+// @Param user body models.User true "User Data"
+// @Success 201 {object} object
+// @Failure 403,500 {object} object
+// @Router / [post]
+func (u UserController) LoginUser(ctx *gin.Context) {
+	var user models.User
+
+	ctx.ShouldBindJSON(&user)
+
+	if user.Email == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Email is required")
+		return
+	}
+
+	if user.PasswordHash == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Password is required")
+		return
+	}
+
+	jwtToken, err := u.service.Login(user)
+
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusForbidden, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"email":  user.Email,
+		"BEARER": jwtToken,
+	})
 }
 
 // GetUsers : GetUsers controller

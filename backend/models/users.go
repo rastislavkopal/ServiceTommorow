@@ -6,13 +6,13 @@ import (
 
 // User model definition
 type User struct {
-	ID        int64     `gorm:"primary_key;auto_increment" json:"id"`
-	FirstName string    `gorm:"size:50" json:"first_name"`
-	LastName  string    `gorm:"size:50" json:"last_name"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	Email     string    `json:"email" gorm:"unique;not null"`
-	Password  string    `json:"password"`
+	ID           int64     `gorm:"primary_key;auto_increment" json:"id"`
+	FirstName    string    `gorm:"size:50" json:"first_name"`
+	LastName     string    `gorm:"size:50" json:"last_name"`
+	CreatedAt    time.Time `json:"created_at,omitempty"`
+	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	Email        string    `json:"email" gorm:"unique_index;not null"`
+	PasswordHash string    `gorm:"column:password;not null" json:"password"`
 }
 
 // TableName for user table model

@@ -53,6 +53,13 @@ func (u UserRepository) Find(user models.User) (models.User, error) {
 	return users, err
 }
 
+// Find -> method for fetching user by email
+func (u UserRepository) FindByEmail(user models.User) (models.User, error) {
+	var usr models.User
+	err := u.db.DB.Where("email = ?", user.Email).First(&usr).Error
+	return usr, err
+}
+
 // Delete -> method to delete user by id
 func (u UserRepository) Delete(user models.User) error {
 	return u.db.DB.Delete(&user).Error

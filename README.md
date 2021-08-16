@@ -8,7 +8,8 @@ docker-compose up
 
 
 # Generate swagger docs
-In root dir run
+(having go-lang setup on local machine)
+In ./backend/ dir run
 ```sh
 swag init
 ```

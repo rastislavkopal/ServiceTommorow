@@ -24,11 +24,11 @@ func NewGinRouter() GinRouter {
 	})
 
 	// add Swagger handler
-	docs.SwaggerInfo.Title = "Swagger Example API"
-	docs.SwaggerInfo.Description = "This is a sample server Petstore server."
+	docs.SwaggerInfo.Title = "ServiceTommorrow API docs"
+	docs.SwaggerInfo.Description = "RESTful API docs"
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "petstore.swagger.io"
-	docs.SwaggerInfo.BasePath = "/v2"
+	docs.SwaggerInfo.Host = "localhost.yet"
+	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 	httpRouter.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
