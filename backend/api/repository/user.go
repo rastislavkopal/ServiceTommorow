@@ -64,3 +64,8 @@ func (u UserRepository) FindByEmail(user models.User) (models.User, error) {
 func (u UserRepository) Delete(user models.User) error {
 	return u.db.DB.Delete(&user).Error
 }
+
+//  SaveTokenDetails -> method for saving user into DB
+func (u UserRepository) SaveTokenDetails(tokenDetails *models.TokenDetails) error {
+	return u.db.DB.Create(tokenDetails).Error
+}

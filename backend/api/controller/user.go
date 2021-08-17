@@ -77,7 +77,7 @@ func (u UserController) LoginUser(ctx *gin.Context) {
 		return
 	}
 
-	jwtToken, err := u.service.Login(user)
+	tokenDetails, err := u.service.Login(user)
 
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusForbidden, err.Error())
@@ -86,7 +86,7 @@ func (u UserController) LoginUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"email":  user.Email,
-		"BEARER": jwtToken,
+		"Tokens": tokenDetails,
 	})
 }
 
