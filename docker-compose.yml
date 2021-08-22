@@ -49,6 +49,8 @@ services:
     restart: always
     ports:
       - 5599:80
+    networks: 
+      - locanet
 
 networks:
     locanet:
