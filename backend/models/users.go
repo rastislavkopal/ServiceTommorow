@@ -2,10 +2,13 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // User model definition
 type User struct {
+	gorm.Model
 	ID           int64     `gorm:"primary_key;auto_increment" json:"id"`
 	FirstName    string    `gorm:"size:50" json:"first_name"`
 	LastName     string    `gorm:"size:50" json:"last_name"`
@@ -17,7 +20,7 @@ type User struct {
 
 // TableName for user table model
 func (user *User) TableName() string {
-	return "user"
+	return "users"
 }
 
 // ResponseMap -> response map method of User
@@ -35,6 +38,7 @@ func (user *User) ResponseMap() map[string]interface{} {
 
 // TokenDetails to define AccessToken token and Refresh token
 type TokenDetails struct {
+	gorm.Model
 	AccessToken  string `gorm:"size:500" json:"access_token"`
 	RefreshToken string `gorm:"size:500" json:"refresh_token"`
 	AccessUuid   string `gorm:"size:40" json:"access_uuid"`
@@ -48,7 +52,7 @@ func (tokenDetails *TokenDetails) TableName() string {
 	return "tokens"
 }
 
-// ResponseMap -> response map method of User
+// ResponseMap -> response map method of TokenDetails
 func (tokenDetails *TokenDetails) ResponseMap() map[string]interface{} {
 	resp := make(map[string]interface{})
 

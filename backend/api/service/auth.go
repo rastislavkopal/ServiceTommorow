@@ -17,7 +17,7 @@ import (
 type AccessDetails struct {
 	TokenUuid string
 	UserId    string
-	UserName  string
+	UserEmail string
 }
 
 type TokenManager struct{}
@@ -27,13 +27,13 @@ func NewTokenService() *TokenManager {
 }
 
 type TokenInterface interface {
-	CreateToken(userId, userName string) (*models.TokenDetails, error)
+	CreateToken(userId, userEmail string) (*models.TokenDetails, error)
 	ExtractTokenMetadata(*http.Request) (*models.TokenDetails, error)
 }
 
 // CreateToken implements the TokenInterface
 // var _ TokenInterface = &TokenManager{}
-func CreateToken(userId int64, userName string) (*models.TokenDetails, error) {
+func CreateToken(userId int64, userEmail string) (*models.TokenDetails, error) {
 	td := &models.TokenDetails{}
 	td.AtExpires = time.Now().Add(time.Minute * 30).Unix() //expires after 30 min
 	td.AccessUuid = uuid.NewV4().String()
@@ -46,7 +46,7 @@ func CreateToken(userId int64, userName string) (*models.TokenDetails, error) {
 	atClaims := jwt.MapClaims{}
 	atClaims["access_uuid"] = td.AccessUuid
 	atClaims["user_id"] = userId
-	atClaims["user_name"] = userName
+	atClaims["user_name"] = userEmail
 	atClaims["exp"] = td.AtExpires
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 	td.AccessToken, err = at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
@@ -61,7 +61,7 @@ func CreateToken(userId int64, userName string) (*models.TokenDetails, error) {
 	rtClaims := jwt.MapClaims{}
 	rtClaims["refresh_uuid"] = td.RefreshUuid
 	rtClaims["user_id"] = userId
-	rtClaims["user_name"] = userName
+	rtClaims["user_name"] = userEmail
 	rtClaims["exp"] = td.RtExpires
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
 
@@ -113,14 +113,14 @@ func Extract(token *jwt.Token) (*AccessDetails, error) {
 	if ok && token.Valid {
 		accessUuid, ok := claims["access_uuid"].(string)
 		userId, userOk := claims["user_id"].(string)
-		userName, userNameOk := claims["user_name"].(string)
-		if ok == false || userOk == false || userNameOk == false {
+		userEmail, userEmailOk := claims["user_name"].(string)
+		if ok == false || userOk == false || userEmailOk == false {
 			return nil, errors.New("unauthorized")
 		} else {
 			return &AccessDetails{
 				TokenUuid: accessUuid,
 				UserId:    userId,
-				UserName:  userName,
+				UserEmail: userEmail,
 			}, nil
 		}
 	}

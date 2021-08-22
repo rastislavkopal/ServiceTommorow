@@ -4,6 +4,7 @@ to start all containers run:
 ```sh
 docker-compose up
 ```
+*Note:* for best backend development experience (to enable hot golang rebuild), project folder should be mounted in ubuntu filesystem `~/project`, not windows `/mnt/c/user/project`
 
 
 

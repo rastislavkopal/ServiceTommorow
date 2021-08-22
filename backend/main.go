@@ -73,6 +73,9 @@ func main() {
 	db.DB.AutoMigrate(
 		&models.User{},
 		&models.TokenDetails{},
+		&models.Workspace{},
+		&models.WorkspaceState{},
+		&models.Task{},
 	)
 
 	router.Gin.Run(":" + os.Getenv("SERVER_PORT")) //server started on 8000 port
