@@ -8,39 +8,36 @@ import (
 
 //UserRoute -> Route for question module
 type UserRoute struct {
-	Controller controller.UserController
-	Handler    common.GinRouter
+	controller *controller.UserController
+	handler    *common.GinRouter
 }
 
 //NewUserRoute -> initializes new choice routes
-func NewUserRoute(
-	controller controller.UserController,
-	handler common.GinRouter,
-) UserRoute {
+func NewUserRoute(c *controller.UserController, h *common.GinRouter) UserRoute {
 	return UserRoute{
-		Controller: controller,
-		Handler:    handler,
+		controller: c,
+		handler:    h,
 	}
 }
 
 //Setup -> setups new choice Routes
-func (u UserRoute) Setup() {
+func (u *UserRoute) Setup() {
 
-	auth := u.Handler.Gin.Group("/auth")
+	auth := u.handler.Gin.Group("/auth")
 	{
-		auth.POST("/register", u.Controller.RegisterUser)
-		auth.POST("/login", u.Controller.LoginUser)
+		auth.POST("/register", u.controller.RegisterUser)
+		auth.POST("/login", u.controller.LoginUser)
 		// user.GET("/logout", u.Controller.LogoutUser)
 	}
 
-	user := u.Handler.Gin.Group("/user")
+	user := u.handler.Gin.Group("/user")
 	user.Use(middleware.AuthRequired)
 	{
-		user.GET("/", u.Controller.GetUsers)
-		user.POST("/", u.Controller.AddUser)
-		user.GET("/:id", u.Controller.GetUser)
-		user.DELETE("/:id", u.Controller.DeleteUser)
-		user.PUT("/:id", u.Controller.UpdateUser)
+		user.GET("/", u.controller.GetUsers)
+		user.POST("/", u.controller.AddUser)
+		user.GET("/:id", u.controller.GetUser)
+		user.DELETE("/:id", u.controller.DeleteUser)
+		user.PUT("/:id", u.controller.UpdateUser)
 	}
 
 }

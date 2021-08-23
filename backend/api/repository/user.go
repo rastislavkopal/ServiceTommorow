@@ -7,23 +7,23 @@ import (
 
 // UserRepository -> UserRepository
 type UserRepository struct {
-	db common.Database
+	db *common.Database
 }
 
 // new Repository : fetching database
-func NewUserRepository(db common.Database) UserRepository {
+func NewUserRepository(db *common.Database) UserRepository {
 	return UserRepository{
 		db: db,
 	}
 }
 
 // Save -> method for saving user into DB
-func (u UserRepository) Save(user models.User) error {
+func (u *UserRepository) Save(user models.User) error {
 	return u.db.DB.Create(&user).Error
 }
 
 // FindAll -> Method for fetching all users from db
-func (u UserRepository) FindAll(user models.User, keyword string) (*[]models.User, int64, error) {
+func (u *UserRepository) FindAll(user models.User, keyword string) (*[]models.User, int64, error) {
 	var users []models.User
 	var totalRows int64 = 0
 
@@ -42,30 +42,30 @@ func (u UserRepository) FindAll(user models.User, keyword string) (*[]models.Use
 }
 
 // Update -> method for update
-func (u UserRepository) Update(user models.User) error {
+func (u *UserRepository) Update(user models.User) error {
 	return u.db.DB.Save(&user).Error
 }
 
 // Find -> method for fetching user by ID
-func (u UserRepository) Find(user models.User) (models.User, error) {
+func (u *UserRepository) Find(user models.User) (models.User, error) {
 	var users models.User
 	err := u.db.DB.Model(&models.User{}).Where(&user).Take(&users).Error
 	return users, err
 }
 
 // Find -> method for fetching user by email
-func (u UserRepository) FindByEmail(user models.User) (models.User, error) {
+func (u *UserRepository) FindByEmail(user models.User) (models.User, error) {
 	var usr models.User
 	err := u.db.DB.Where("email = ?", user.Email).First(&usr).Error
 	return usr, err
 }
 
 // Delete -> method to delete user by id
-func (u UserRepository) Delete(user models.User) error {
+func (u *UserRepository) Delete(user models.User) error {
 	return u.db.DB.Delete(&user).Error
 }
 
 //  SaveTokenDetails -> method for saving user into DB
-func (u UserRepository) SaveTokenDetails(tokenDetails *models.TokenDetails) error {
+func (u *UserRepository) SaveTokenDetails(tokenDetails *models.TokenDetails) error {
 	return u.db.DB.Create(tokenDetails).Error
 }

@@ -12,11 +12,11 @@ import (
 
 //UserController -> UserController
 type UserController struct {
-	service service.UserService
+	service *service.UserService
 }
 
 //NewUserController : NewUserController
-func NewUserController(s service.UserService) UserController {
+func NewUserController(s *service.UserService) UserController {
 	return UserController{
 		service: s,
 	}
@@ -31,7 +31,7 @@ func NewUserController(s service.UserService) UserController {
 // @Success 201 {object} object
 // @Failure 400,500 {object} object
 // @Router / [post]
-func (u UserController) RegisterUser(ctx *gin.Context) {
+func (u *UserController) RegisterUser(ctx *gin.Context) {
 	var user models.User
 	ctx.ShouldBindJSON(&user)
 
@@ -62,7 +62,7 @@ func (u UserController) RegisterUser(ctx *gin.Context) {
 // @Success 201 {object} object
 // @Failure 403,500 {object} object
 // @Router / [post]
-func (u UserController) LoginUser(ctx *gin.Context) {
+func (u *UserController) LoginUser(ctx *gin.Context) {
 	var user models.User
 
 	ctx.ShouldBindJSON(&user)
@@ -97,7 +97,7 @@ func (u UserController) LoginUser(ctx *gin.Context) {
 // @Success 200 {array} models.User
 // @Failure 404 {object} object
 // @Router / [get]
-func (u UserController) GetUsers(ctx *gin.Context) {
+func (u *UserController) GetUsers(ctx *gin.Context) {
 	var users models.User
 
 	keyword := ctx.Query("keyword")
@@ -197,7 +197,7 @@ func (u *UserController) DeleteUser(c *gin.Context) {
 }
 
 //UpdateUser : get update by id
-func (u UserController) UpdateUser(ctx *gin.Context) {
+func (u *UserController) UpdateUser(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 
 	id, err := strconv.ParseInt(idParam, 10, 64)

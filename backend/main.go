@@ -61,13 +61,10 @@ func init() {
 // @x-extension-openapi {"example": "value on a json format"}
 func main() {
 
-	router := common.NewGinRouter()                             //router has been initialized and configured
-	db := common.NewDatabase()                                  // databse has been initialized and configured
-	userRepository := repository.NewUserRepository(db)          // repository are being setup
-	userService := service.NewUserService(userRepository)       // service are being setup
-	userController := controller.NewUserController(userService) // controller are being set up
-	userRoute := routes.NewUserRoute(userController, router)    // user routes are initialized
-	userRoute.Setup()                                           // user routes are being setup
+	router := common.NewGinRouter() //router has been initialized and configured
+	db := common.NewDatabase()      // databse has been initialized and configured
+
+	initUserService(&router, &db)
 
 	// migrating models to datbase table
 	db.DB.AutoMigrate(
@@ -79,4 +76,12 @@ func main() {
 	)
 
 	router.Gin.Run(":" + os.Getenv("SERVER_PORT")) //server started on 8000 port
+}
+
+func initUserService(r *common.GinRouter, db *common.Database) {
+	userRepository := repository.NewUserRepository(db)           // repository are being setup
+	userService := service.NewUserService(&userRepository)       // service are being setup
+	userController := controller.NewUserController(&userService) // controller are being set up
+	userRoute := routes.NewUserRoute(&userController, r)         // user routes are initialized
+	userRoute.Setup()                                            // user routes are being setup
 }
