@@ -4,6 +4,7 @@ import (
 	"backend/api/service"
 	"backend/models"
 	"backend/util"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -54,14 +55,14 @@ func (w *WorkspaceController) GetWorkspaces(ctx *gin.Context) {
 		}})
 }
 
-// AddWorkspace : AddWorkspace controller
+// CreateWorkspace : CreateWorkspace controller
 // @Summary Create new workspace
 // @Description Create new workspace
 // @Tags Workspaces
 // @Success 201 {array} models.Workspace
 // @Failure 400 {object} object
 // @Router / [post]
-func (w *WorkspaceController) AddWorkspace(ctx *gin.Context) {
+func (w *WorkspaceController) CreateWorkspace(ctx *gin.Context) {
 	var ws models.Workspace
 	ctx.ShouldBindJSON(&ws)
 
@@ -70,7 +71,14 @@ func (w *WorkspaceController) AddWorkspace(ctx *gin.Context) {
 		return
 	}
 
-	err := w.service.Save(ws)
+	owner_id, err := strconv.ParseInt(ctx.PostForm("owner_id"), 10, 64)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Owner_id is required")
+		return
+	}
+
+	err = w.service.Save(ws, owner_id)
+
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create workspace")
 		return

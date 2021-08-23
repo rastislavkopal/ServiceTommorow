@@ -3,20 +3,33 @@ package service
 import (
 	"backend/api/repository"
 	"backend/models"
+	"errors"
 )
 
 type WorkspaceService struct {
 	repository *repository.WorkspaceRepository
+	userRepo   *repository.UserRepository
 }
 
-func NewWorkspaceService(r *repository.WorkspaceRepository) WorkspaceService {
+func NewWorkspaceService(r *repository.WorkspaceRepository, u *repository.UserRepository) WorkspaceService {
 	return WorkspaceService{
 		repository: r,
+		userRepo:   u,
 	}
 }
 
 // Save -> calls workspaceRepository save method
-func (w *WorkspaceService) Save(ws models.Workspace) error {
+func (w *WorkspaceService) Save(ws models.Workspace, owner_id int64) error {
+	var user models.User
+	user.ID = owner_id
+
+	foundUser, err := w.userRepo.Find(user)
+	if err != nil {
+		return errors.New("could not find user")
+	}
+
+	ws.OwnerId = foundUser
+
 	return w.repository.Save(ws)
 }
 

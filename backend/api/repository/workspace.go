@@ -17,7 +17,7 @@ func NewWorkspaceRepository(db *common.Database) WorkspaceRepository {
 
 // Save -> function to save workspace into DB
 func (w *WorkspaceRepository) Save(ws models.Workspace) error {
-	return w.db.DB.Save(&ws).Error
+	return w.db.DB.Create(&ws).Error
 }
 
 // FindAll -> Method for fetching all workspaces
