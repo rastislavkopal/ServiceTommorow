@@ -10,10 +10,10 @@ import (
 )
 
 type WorkspaceController struct {
-	service service.WorkspaceService
+	service *service.WorkspaceService
 }
 
-func NewWorkspaceController(s service.WorkspaceService) WorkspaceController {
+func NewWorkspaceController(s *service.WorkspaceService) WorkspaceController {
 	return WorkspaceController{
 		service: s,
 	}

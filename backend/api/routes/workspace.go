@@ -6,11 +6,11 @@ import (
 )
 
 type WorkspaceRoute struct {
-	controller controller.WorkspaceController
-	handler    common.GinRouter
+	controller *controller.WorkspaceController
+	handler    *common.GinRouter
 }
 
-func NewWorkspaceRoute(c controller.WorkspaceController, h common.GinRouter) WorkspaceRoute {
+func NewWorkspaceRoute(c *controller.WorkspaceController, h *common.GinRouter) WorkspaceRoute {
 	return WorkspaceRoute{
 		controller: c,
 		handler:    h,

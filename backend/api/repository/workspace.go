@@ -6,10 +6,10 @@ import (
 )
 
 type WorkspaceRepository struct {
-	db common.Database
+	db *common.Database
 }
 
-func NewWorkspaceRepository(db common.Database) WorkspaceRepository {
+func NewWorkspaceRepository(db *common.Database) WorkspaceRepository {
 	return WorkspaceRepository{
 		db: db,
 	}

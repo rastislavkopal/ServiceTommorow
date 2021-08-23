@@ -6,10 +6,10 @@ import (
 )
 
 type WorkspaceService struct {
-	repository repository.WorkspaceRepository
+	repository *repository.WorkspaceRepository
 }
 
-func NewWorkspaceService(r repository.WorkspaceRepository) WorkspaceService {
+func NewWorkspaceService(r *repository.WorkspaceRepository) WorkspaceService {
 	return WorkspaceService{
 		repository: r,
 	}

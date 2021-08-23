@@ -65,6 +65,7 @@ func main() {
 	db := common.NewDatabase()      // databse has been initialized and configured
 
 	initUserService(&router, &db)
+	initWorkspaceService(&router, &db)
 
 	// migrating models to datbase table
 	db.DB.AutoMigrate(
@@ -78,10 +79,20 @@ func main() {
 	router.Gin.Run(":" + os.Getenv("SERVER_PORT")) //server started on 8000 port
 }
 
+// init user and auth service
 func initUserService(r *common.GinRouter, db *common.Database) {
 	userRepository := repository.NewUserRepository(db)           // repository are being setup
 	userService := service.NewUserService(&userRepository)       // service are being setup
 	userController := controller.NewUserController(&userService) // controller are being set up
 	userRoute := routes.NewUserRoute(&userController, r)         // user routes are initialized
 	userRoute.Setup()                                            // user routes are being setup
+}
+
+// init workspace service
+func initWorkspaceService(r *common.GinRouter, db *common.Database) {
+	workspaceRepo := repository.NewWorkspaceRepository(db)
+	workspaceService := service.NewWorkspaceService(&workspaceRepo)
+	workspaceController := controller.NewWorkspaceController(&workspaceService)
+	workspaceRoute := routes.NewWorkspaceRoute(&workspaceController, r)
+	workspaceRoute.Setup()
 }
