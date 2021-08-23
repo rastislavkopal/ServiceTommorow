@@ -21,8 +21,8 @@ func (w *WorkspaceRoute) Setup() {
 	workspace := w.handler.Gin.Group("/workspace")
 	{
 		workspace.GET("/", w.controller.GetWorkspaces)
-		// workspace.POST("/", w.controller.AddWorkspace)
-		// workspace.GET("/:id", w.controller.GetWorkspace)
+		workspace.POST("/", w.controller.AddWorkspace)
+		workspace.GET("/:id", w.controller.GetWorkspace)
 		// workspace.DELETE("/:id", w.controller.DeleteWorkspace)
 		// workspace.PUT("/:id", w.controller.UpdateWorkspace)
 	}

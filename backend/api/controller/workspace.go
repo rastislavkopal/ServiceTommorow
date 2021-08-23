@@ -5,6 +5,7 @@ import (
 	"backend/models"
 	"backend/util"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +24,7 @@ func NewWorkspaceController(s *service.WorkspaceService) WorkspaceController {
 // @Summary Get list of workspaces
 // @Description get all workspaces
 // @Tags Workspaces
-// @Success 200 {array} models.User
+// @Success 200 {array} models.Workspace
 // @Failure 404 {object} object
 // @Router / [get]
 func (w *WorkspaceController) GetWorkspaces(ctx *gin.Context) {
@@ -46,9 +47,64 @@ func (w *WorkspaceController) GetWorkspaces(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, &util.Response{
 		Success: true,
-		Message: "User result set",
+		Message: "Workspace result set",
 		Data: map[string]interface{}{
 			"rows":       respArr,
 			"total_rows": total,
 		}})
+}
+
+// AddWorkspace : AddWorkspace controller
+// @Summary Create new workspace
+// @Description Create new workspace
+// @Tags Workspaces
+// @Success 201 {array} models.Workspace
+// @Failure 400 {object} object
+// @Router / [post]
+func (w *WorkspaceController) AddWorkspace(ctx *gin.Context) {
+	var ws models.Workspace
+	ctx.ShouldBindJSON(&ws)
+
+	if ws.Title == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Title is required")
+		return
+	}
+
+	err := w.service.Save(ws)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create workspace")
+		return
+	}
+	util.SuccessJSON(ctx, http.StatusCreated, "Successfully created new workspace")
+}
+
+// GetWorkspace -> get workspace by id
+// @Summary Get one workspace
+// @Description get workspace by ID
+// @Tags Workspaces
+// @Param id path string true "Workspace ID"
+// @Success 200 {object} models.Workspace
+// @Failure 400,404 {object} object
+// @Router /{id} [get]
+func (w *WorkspaceController) GetWorkspace(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to int64
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
+		return
+	}
+	var workspace models.Workspace
+	workspace.ID = id
+	foundWorkspace, err := w.service.Find(&workspace)
+	if err != nil {
+		util.ErrorJSON(c, http.StatusBadRequest, "Error Finding Workspace")
+		return
+	}
+	response := foundWorkspace.ResponseMap()
+
+	c.JSON(http.StatusOK, &util.Response{
+		Success: true,
+		Message: "Result set of Workspace",
+		Data:    &response})
+
 }

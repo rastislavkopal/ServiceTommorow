@@ -25,6 +25,11 @@ func (w *WorkspaceService) FindAll(ws models.Workspace) (*[]models.Workspace, in
 	return w.repository.FindAll()
 }
 
+// Find -> calls to workspaceRepository Find method
+func (w *WorkspaceService) Find(ws *models.Workspace) (*models.Workspace, error) {
+	return w.repository.Find(ws)
+}
+
 // Update -> calls workspaceRepo update method
 func (w *WorkspaceService) Update(ws models.Workspace) error {
 	return w.repository.Update(ws)
