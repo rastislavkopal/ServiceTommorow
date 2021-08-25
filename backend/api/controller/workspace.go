@@ -100,11 +100,11 @@ func (w *WorkspaceController) GetWorkspace(c *gin.Context) {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
 		return
 	}
-	var workspace models.Workspace
-	workspace.ID = id
+	workspace := models.Workspace{ID: id}
 	foundWorkspace, err := w.service.Find(&workspace)
+
 	if err != nil {
-		util.ErrorJSON(c, http.StatusBadRequest, "Error Finding Workspace")
+		util.ErrorJSON(c, http.StatusNotFound, "Workspace not found")
 		return
 	}
 	response := foundWorkspace.ResponseMap()
