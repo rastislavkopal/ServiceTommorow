@@ -23,7 +23,7 @@ func (w *WorkspaceRoute) Setup() {
 		workspace.GET("/", w.controller.GetWorkspaces)
 		workspace.POST("/", w.controller.CreateWorkspace)
 		workspace.GET("/:id", w.controller.GetWorkspace)
-		// workspace.DELETE("/:id", w.controller.DeleteWorkspace)
+		workspace.DELETE("/:id", w.controller.DeleteWorkspace)
 		// workspace.PUT("/:id", w.controller.UpdateWorkspace)
 	}
 }

@@ -19,7 +19,7 @@ func NewWorkspaceService(r *repository.WorkspaceRepository, u *repository.UserRe
 }
 
 // Save -> calls workspaceRepository save method
-func (w *WorkspaceService) Save(ws models.Workspace, user_id uint64) error {
+func (w *WorkspaceService) Save(ws *models.Workspace, user_id uint64) error {
 	var user models.User
 	user.ID = user_id
 
@@ -44,7 +44,7 @@ func (w *WorkspaceService) Find(ws *models.Workspace) (*models.Workspace, error)
 }
 
 // Update -> calls workspaceRepo update method
-func (w *WorkspaceService) Update(ws models.Workspace) error {
+func (w *WorkspaceService) Update(ws *models.Workspace) error {
 	return w.repository.Update(ws)
 }
 
