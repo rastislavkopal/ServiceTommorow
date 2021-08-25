@@ -155,7 +155,7 @@ func (u *UserController) AddUser(ctx *gin.Context) {
 // @Router /{id} [get]
 func (u *UserController) GetUser(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to int64
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
 		return
@@ -179,7 +179,7 @@ func (u *UserController) GetUser(c *gin.Context) {
 //DeleteUser : Deletes User
 func (u *UserController) DeleteUser(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to uint64
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
 		return
@@ -200,7 +200,7 @@ func (u *UserController) DeleteUser(c *gin.Context) {
 func (u *UserController) UpdateUser(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 
-	id, err := strconv.ParseInt(idParam, 10, 64)
+	id, err := strconv.ParseUint(idParam, 10, 64)
 
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")

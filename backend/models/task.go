@@ -8,7 +8,7 @@ import (
 
 type Task struct {
 	gorm.Model
-	ID               int64          `json:"id"`
+	ID               uint64         `json:"id"`
 	Title            string         `json:"title"`
 	Description      string         `json:"description"`
 	Status           string         `json:"status"`
@@ -32,7 +32,7 @@ func (task *Task) ResponseMap() map[string]interface{} {
 	resp["title"] = task.Title
 	resp["description"] = task.Description
 	resp["status"] = task.Status
-	resp["owner_id"] = task.OwnerId.ID
+	resp["user_id"] = task.OwnerId.ID
 	resp["workspace_id"] = task.WorkspaceId.ID
 	resp["deadline"] = task.Deadline
 	resp["workspace_state_id"] = task.WorkspaceStateId.ID

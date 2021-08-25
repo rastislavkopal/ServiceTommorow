@@ -4,7 +4,6 @@ import (
 	"backend/api/service"
 	"backend/models"
 	"backend/util"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -71,13 +70,13 @@ func (w *WorkspaceController) CreateWorkspace(ctx *gin.Context) {
 		return
 	}
 
-	owner_id, err := strconv.ParseInt(ctx.PostForm("owner_id"), 10, 64)
-	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Owner_id is required")
-		return
-	}
+	// user_id, err := strconv.ParseUint(ctx.PostForm("user_id"), 10, 64)
+	// if err != nil {
+	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "user_id is required")
+	// 	return
+	// }
 
-	err = w.service.Save(ws, owner_id)
+	err := w.service.Save(ws, ws.AuthorID)
 
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create workspace")
@@ -96,7 +95,7 @@ func (w *WorkspaceController) CreateWorkspace(ctx *gin.Context) {
 // @Router /{id} [get]
 func (w *WorkspaceController) GetWorkspace(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.ParseInt(idParam, 10, 64) //type conversion string to int64
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
 		return

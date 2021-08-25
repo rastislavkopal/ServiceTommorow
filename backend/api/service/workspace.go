@@ -19,16 +19,16 @@ func NewWorkspaceService(r *repository.WorkspaceRepository, u *repository.UserRe
 }
 
 // Save -> calls workspaceRepository save method
-func (w *WorkspaceService) Save(ws models.Workspace, owner_id int64) error {
+func (w *WorkspaceService) Save(ws models.Workspace, user_id uint64) error {
 	var user models.User
-	user.ID = owner_id
+	user.ID = user_id
 
 	foundUser, err := w.userRepo.Find(user)
 	if err != nil {
 		return errors.New("could not find user")
 	}
 
-	ws.OwnerId = foundUser
+	ws.Author = foundUser
 
 	return w.repository.Save(ws)
 }
@@ -49,7 +49,7 @@ func (w *WorkspaceService) Update(ws models.Workspace) error {
 }
 
 // Delete -> calls workspaceRepository delete method
-func (w *WorkspaceService) Delete(id int64) error {
+func (w *WorkspaceService) Delete(id uint64) error {
 	var workspace models.Workspace
 	workspace.ID = id
 	return w.repository.Delete(workspace)

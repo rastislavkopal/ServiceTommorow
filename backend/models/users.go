@@ -9,7 +9,7 @@ import (
 // User model definition
 type User struct {
 	gorm.Model
-	ID           int64     `gorm:"primary_key;auto_increment" json:"id"`
+	ID           uint64    `gorm:"primary_key;auto_increment" json:"id"`
 	FirstName    string    `gorm:"size:50" json:"first_name"`
 	LastName     string    `gorm:"size:50" json:"last_name"`
 	CreatedAt    time.Time `json:"created_at,omitempty"`

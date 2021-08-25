@@ -88,7 +88,7 @@ func (u *UserService) Update(user models.User) error {
 }
 
 // Delete -> calls user repo delete method
-func (u *UserService) Delete(id int64) error {
+func (u *UserService) Delete(id uint64) error {
 	var user models.User
 	user.ID = id
 	return u.repository.Delete(user)
