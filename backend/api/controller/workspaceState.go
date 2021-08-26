@@ -25,9 +25,24 @@ func NewWorkspaceStateController(s *service.WorkspaceService) WorkspaceStateCont
 // @Tags WorkspaceState
 // @Success 200 {array} models.WorkspaceState
 // @Failure 404 {object} object
-// @Router / [get]
+// @Router /{id} [get]
 func (w *WorkspaceController) GetWorkspaceStates(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
+		return
+	}
+
+	ws := models.Workspace{ID: id}
+	foundWs, err := w.service.Find(&ws)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusNotFound, "Failed to find Workspace")
+		return
+	}
+
 	var wss models.WorkspaceState
+	wss.Workspace = *foundWs
 
 	data, total, err := w.service.FindAllWorkspaceState(wss)
 
@@ -56,28 +71,40 @@ func (w *WorkspaceController) GetWorkspaceStates(ctx *gin.Context) {
 // @Tags WorkspaceState
 // @Success 201 {array} models.WorkspaceState
 // @Failure 400 {object} object
-// @Router / [post]
+// @Router /{id} [post]
 func (w *WorkspaceController) CreateWorkspaceState(ctx *gin.Context) {
-	var ws models.Workspace
-	ctx.ShouldBindJSON(&ws)
+	idParam := ctx.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
+		return
+	}
 
-	if ws.Title == "" {
+	ws := models.Workspace{ID: id}
+	foundWs, err := w.service.Find(&ws)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusNotFound, "Failed to find Workspace")
+		return
+	}
+
+	var wss models.WorkspaceState
+	ctx.ShouldBindJSON(&ws)
+	if wss.Title == "" {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Title is required")
 		return
 	}
 
-	err := w.service.Save(&ws, ws.AuthorID)
-
+	err = w.service.SaveWorkspaceState(&wss, foundWs.ID)
 	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create workspace")
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create WorkspaceState")
 		return
 	}
 
 	ctx.JSON(http.StatusOK, &util.Response{
 		Success: true,
-		Message: "Successfully created new workspace",
+		Message: "Successfully created new WorkspaceState",
 		Data: map[string]interface{}{
-			"workspace_id": ws.ID,
+			"workspace_state_id": wss.ID,
 		}})
 }
 
@@ -87,26 +114,42 @@ func (w *WorkspaceController) CreateWorkspaceState(ctx *gin.Context) {
 // @Param id path string true "WorkspaceState ID"
 // @Success 200 {object} models.WorkspaceState
 // @Failure 400,404 {object} object
-// @Router /{id} [get]
-func (w *WorkspaceController) GetWorkspaceState(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
+// @Router /{id}/workspace/{wss_id} [get]
+func (w *WorkspaceController) GetWorkspaceState(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
 	if err != nil {
-		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
+		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
 		return
 	}
-	workspace := models.Workspace{ID: id}
-	foundWorkspace, err := w.service.Find(&workspace)
 
+	wssIdParam := ctx.Param("wss_id")
+	wssId, err := strconv.ParseUint(wssIdParam, 10, 64) //type conversion string to uint64
 	if err != nil {
-		util.ErrorJSON(c, http.StatusNotFound, "Workspace not found")
+		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
 		return
 	}
-	response := foundWorkspace.ResponseMap()
 
-	c.JSON(http.StatusOK, &util.Response{
+	ws := models.Workspace{ID: id}
+	foundWs, err := w.service.Find(&ws)
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusNotFound, "Failed to find Workspace")
+		return
+	}
+
+	wss := models.WorkspaceState{ID: wssId, WorkspaceID: foundWs.ID}
+	_, err = w.service.FindWorkspaceState(&wss)
+
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create WorkspaceState")
+		return
+	}
+
+	response := wss.ResponseMap()
+
+	ctx.JSON(http.StatusOK, &util.Response{
 		Success: true,
-		Message: "Result workspace",
+		Message: "Result WorkspaceState",
 		Data:    &response})
 }
 
@@ -116,21 +159,21 @@ func (w *WorkspaceController) GetWorkspaceState(c *gin.Context) {
 // @Param id path string true "WorkspaceState ID"
 // @Success 200 {object} models.WorkspaceState
 // @Failure 400,404 {object} object
-// @Router /{id} [delete]
+// @Router /{id}/workspace/{wss_id} [delete]
 func (w *WorkspaceController) DeleteWorkspaceState(c *gin.Context) {
-	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
-	if err != nil {
-		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
-		return
-	}
+	// idParam := c.Param("id")
+	// id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
+	// if err != nil {
+	// 	util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
+	// 	return
+	// }
 
-	err = w.service.Delete(id)
+	// err = w.service.Delete(id)
 
-	if err != nil {
-		util.ErrorJSON(c, http.StatusNotFound, "Failed to delete User")
-		return
-	}
+	// if err != nil {
+	// 	util.ErrorJSON(c, http.StatusNotFound, "Failed to delete User")
+	// 	return
+	// }
 
 	response := &util.Response{
 		Success: true,
@@ -144,45 +187,45 @@ func (w *WorkspaceController) DeleteWorkspaceState(c *gin.Context) {
 // @Param id path string true "WorkspaceState ID"
 // @Success 200 {object} models.WorkspaceState
 // @Failure 400,404 {object} object
-// @Router /{id} [put]
+// @Router /{id}/workspace/{wss_id} [put]
 func (w *WorkspaceController) UpdateWorkspaceState(ctx *gin.Context) {
-	idParam := ctx.Param("id")
+	// idParam := ctx.Param("id")
 
-	id, err := strconv.ParseUint(idParam, 10, 64)
+	// id, err := strconv.ParseUint(idParam, 10, 64)
 
-	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
-		return
-	}
+	// if err != nil {
+	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "id invalid")
+	// 	return
+	// }
 
-	ws := models.Workspace{ID: id}
+	// ws := models.Workspace{ID: id}
 
-	wsRecord, err := w.service.Find(&ws)
+	// wsRecord, err := w.service.Find(&ws)
 
-	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "User with given id not found")
-		return
-	}
-	ctx.ShouldBindJSON(&wsRecord)
+	// if err != nil {
+	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "User with given id not found")
+	// 	return
+	// }
+	// ctx.ShouldBindJSON(&wsRecord)
 
-	if ws.Title == "" {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Title is required")
-		return
-	}
-	if ws.Author.ID == 0 {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Author is required")
-		return
-	}
+	// if ws.Title == "" {
+	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "Title is required")
+	// 	return
+	// }
+	// if ws.Author.ID == 0 {
+	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "Author is required")
+	// 	return
+	// }
 
-	if err := w.service.Update(wsRecord); err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to store User")
-		return
-	}
-	response := wsRecord.ResponseMap()
+	// if err := w.service.Update(wsRecord); err != nil {
+	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to store User")
+	// 	return
+	// }
+	// response := wsRecord.ResponseMap()
 
 	ctx.JSON(http.StatusOK, &util.Response{
 		Success: true,
 		Message: "Successfully Updated User",
-		Data:    response,
+		// Data:    response,
 	})
 }

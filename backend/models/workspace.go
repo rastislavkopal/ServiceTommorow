@@ -37,7 +37,7 @@ type WorkspaceState struct {
 	ID          uint64    `json:"id"`
 	Workspace   Workspace `json:"workspace_id" gorm:"foreignKey:WorkspaceID"`
 	WorkspaceID uint64    `json:"-"`
-	StateTitle  string    `json:"state_title"`
+	Title       string    `json:"state_title"`
 	StateOrder  int       `json:"state_order"`
 }
 
@@ -52,7 +52,7 @@ func (wss *WorkspaceState) ResponseMap() map[string]interface{} {
 
 	resp["id"] = wss.ID
 	resp["workspace_id"] = wss.Workspace.ID
-	resp["state_title"] = wss.StateTitle
+	resp["state_title"] = wss.Title
 	resp["state_order"] = wss.StateOrder
 
 	return resp
