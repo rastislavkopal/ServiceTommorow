@@ -114,7 +114,7 @@ func (w *WorkspaceController) CreateWorkspaceState(ctx *gin.Context) {
 // @Param id path string true "WorkspaceState ID"
 // @Success 200 {object} models.WorkspaceState
 // @Failure 400,404 {object} object
-// @Router /{id}/workspace/{wss_id} [get]
+// @Router /{id}/state/{wss_id} [get]
 func (w *WorkspaceController) GetWorkspaceState(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
@@ -159,7 +159,7 @@ func (w *WorkspaceController) GetWorkspaceState(ctx *gin.Context) {
 // @Param id path string true "WorkspaceState ID"
 // @Success 200 {object} models.WorkspaceState
 // @Failure 400,404 {object} object
-// @Router /{id}/workspace/{wss_id} [delete]
+// @Router /{id}/state/{wss_id} [delete]
 func (w *WorkspaceController) DeleteWorkspaceState(c *gin.Context) {
 	// idParam := c.Param("id")
 	// id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
@@ -187,7 +187,7 @@ func (w *WorkspaceController) DeleteWorkspaceState(c *gin.Context) {
 // @Param id path string true "WorkspaceState ID"
 // @Success 200 {object} models.WorkspaceState
 // @Failure 400,404 {object} object
-// @Router /{id}/workspace/{wss_id} [put]
+// @Router /{id}/state/{wss_id} [put]
 func (w *WorkspaceController) UpdateWorkspaceState(ctx *gin.Context) {
 	// idParam := ctx.Param("id")
 
