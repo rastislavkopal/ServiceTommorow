@@ -43,7 +43,43 @@ func (w *WorkspaceRepository) Update(ws *models.Workspace) error {
 	return w.db.DB.Save(ws).Error
 }
 
-// Delete -> method to delete user by id
+// Delete -> method to delete workspace by id
 func (w *WorkspaceRepository) Delete(ws models.Workspace) error {
 	return w.db.DB.Delete(&ws).Error
+}
+
+//****************************
+//*  WorkspaceState handlers *
+//****************************
+// Save -> function to save workspace into DB
+func (w *WorkspaceRepository) SaveWorkspaceState(wss *models.WorkspaceState) error {
+	return w.db.DB.Create(wss).Error
+}
+
+// FindAll -> Method for fetching all WorkspacesStates
+func (w *WorkspaceRepository) FindAllWorkspaceState() (*[]models.WorkspaceState, int64, error) {
+	var workspacesStates []models.WorkspaceState
+
+	result := w.db.DB.Find(&workspacesStates)
+
+	return &workspacesStates, result.RowsAffected, result.Error
+}
+
+// Find-> Method for fetching WorkspacesStates by id
+func (w *WorkspaceRepository) FindWorkspaceState(wss *models.WorkspaceState) (*models.WorkspaceState, error) {
+	var foundWss models.WorkspaceState
+
+	err := w.db.DB.First(&foundWss, "id = ?", wss.ID).Error
+
+	return &foundWss, err
+}
+
+// Update -> method for update WorkspacesStates
+func (w *WorkspaceRepository) UpdateWorkspaceState(wss *models.WorkspaceState) error {
+	return w.db.DB.Save(wss).Error
+}
+
+// Delete -> method to delete WorkspacesStates by id
+func (w *WorkspaceRepository) DeleteWorkspaceState(wss *models.WorkspaceState) error {
+	return w.db.DB.Delete(wss).Error
 }

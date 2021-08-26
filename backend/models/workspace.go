@@ -31,11 +31,12 @@ func (ws *Workspace) ResponseMap() map[string]interface{} {
 	return resp
 }
 
-// WorkspaceState model definition e.g. TODO / In-progress / done etc.
+// WorkspaceState model definition e.g. TODO / In-progress / Done etc.
 type WorkspaceState struct {
 	gorm.Model
 	ID          uint64    `json:"id"`
-	WorkspaceId Workspace `json:"workspace_id" gorm:"foreignKey:ID"`
+	Workspace   Workspace `json:"workspace_id" gorm:"foreignKey:WorkspaceID"`
+	WorkspaceID uint64    `json:"-"`
 	StateTitle  string    `json:"state_title"`
 	StateOrder  int       `json:"state_order"`
 }
@@ -50,7 +51,7 @@ func (wss *WorkspaceState) ResponseMap() map[string]interface{} {
 	resp := make(map[string]interface{})
 
 	resp["id"] = wss.ID
-	resp["workspace_id"] = wss.WorkspaceId.ID
+	resp["workspace_id"] = wss.Workspace.ID
 	resp["state_title"] = wss.StateTitle
 	resp["state_order"] = wss.StateOrder
 

@@ -12,10 +12,13 @@ type Task struct {
 	Title            string         `json:"title"`
 	Description      string         `json:"description"`
 	Status           string         `json:"status"`
-	OwnerId          User           `json:"owner_id" gorm:"foreignKey:ID"`
-	WorkspaceId      Workspace      `json:"workspace_id" gorm:"foreignKey:ID"`
+	Author           User           `json:"author_id" gorm:"foreignKey:AuthorID"`
+	AuthorID         uint64         `json:"-"`
+	Workspace        Workspace      `json:"workspace_id" gorm:"foreignKey:WorkspaceID"`
+	WorkspaceID      uint64         `json:"-"`
 	Deadline         time.Time      `json:"deadline"`
-	WorkspaceStateId WorkspaceState `json:"workspace_state_id" gorm:"foreignKey:ID"`
+	WorkspaceState   WorkspaceState `json:"workspace_state_id" gorm:"foreignKey:ID"`
+	WorkspaceStateID uint64         `json:"-"`
 	Users            []User         `json:"users,omitempty" gorm:"many2many:tasks_users"`
 }
 
@@ -32,10 +35,10 @@ func (task *Task) ResponseMap() map[string]interface{} {
 	resp["title"] = task.Title
 	resp["description"] = task.Description
 	resp["status"] = task.Status
-	resp["user_id"] = task.OwnerId.ID
-	resp["workspace_id"] = task.WorkspaceId.ID
+	resp["author_id"] = task.Author.ID
+	resp["workspace_id"] = task.Workspace.ID
 	resp["deadline"] = task.Deadline
-	resp["workspace_state_id"] = task.WorkspaceStateId.ID
+	resp["workspace_state_id"] = task.WorkspaceState.ID
 
 	return resp
 }
