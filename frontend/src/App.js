@@ -1,21 +1,17 @@
 import './App.css';
+import Workspace from "./components/Workspace";
+import AppNav from "./components/AppNav"
+
+require('dotenv').config()
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <AppNav />
+      <header className="App-header" class="text-blue-400">
+        Hi TODO list
       </header>
+      <Workspace />
     </div>
   );
 }
