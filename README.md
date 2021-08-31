@@ -16,3 +16,13 @@ swag init
 ```
 Swagger docs are available at:
 http://localhost:8000/swagger/index.html#/
+
+# Frontend || react app
+
+In order to access local (dev) api from local react add
+```sh
+"proxy": "http://api:8000",
+```
+ to /frontend/package.json 
+
+`note:` *api* is the name of docker-compose container
