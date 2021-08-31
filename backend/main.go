@@ -91,4 +91,11 @@ func initServices(r *common.GinRouter, db *common.Database) {
 	workspaceController := controller.NewWorkspaceController(&workspaceService)
 	workspaceRoute := routes.NewWorkspaceRoute(&workspaceController, r)
 	workspaceRoute.Setup()
+
+	// workspace/:ws_id/task/
+	taskRepo := repository.NewTaskRepository(db)
+	taskRepoService := service.NewTaskService(&taskRepo)
+	taskRepoController := controller.NewTaskController(&taskRepoService)
+	taskRepoRoute := routes.NewTaskRoute(&taskRepoController, r)
+	taskRepoRoute.Setup()
 }

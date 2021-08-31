@@ -6,13 +6,13 @@ import (
 	"backend/common"
 )
 
-//UserRoute -> Route for question module
+//UserRoute -> Route for user module
 type UserRoute struct {
 	controller *controller.UserController
 	handler    *common.GinRouter
 }
 
-//NewUserRoute -> initializes new choice routes
+//NewUserRoute -> initializes new user routes
 func NewUserRoute(c *controller.UserController, h *common.GinRouter) UserRoute {
 	return UserRoute{
 		controller: c,
@@ -20,7 +20,7 @@ func NewUserRoute(c *controller.UserController, h *common.GinRouter) UserRoute {
 	}
 }
 
-//Setup -> setups new choice Routes
+//Setup -> setups new user Routes
 func (u *UserRoute) Setup() {
 
 	auth := u.handler.Gin.Group("/auth")
