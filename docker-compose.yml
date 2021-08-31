@@ -36,19 +36,36 @@ services:
     entrypoint: ["/app/wait-for.sh", "db:3306", "--"]
     command: ["CompileDaemon", "--build", "go build main.go", "--command", "./main"]
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: ${APP_NAME}-phpmyadmin
-    links:
-      - db
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      # PMA_ARBITRARY: 1
-      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-    restart: always
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: ${APP_NAME}-phpmyadmin
+  #   links:
+  #     - db
+  #   environment:
+  #     PMA_HOST: db
+  #     PMA_PORT: 3306
+  #     # PMA_ARBITRARY: 1
+  #     MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+  #   restart: always
+  #   ports:
+  #     - 5599:80
+  #   networks: 
+  #     - locanet
+
+  web:
+    container_name: ${APP_NAME}-frontend
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - "./frontend/:/app"
+      - '/frontend/node_modules'
     ports:
-      - 5599:80
+      - 3000:3000
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
     networks: 
       - locanet
 

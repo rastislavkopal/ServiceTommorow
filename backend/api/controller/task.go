@@ -83,7 +83,7 @@ func (t *TaskController) AddTask(ctx *gin.Context) {
 // @Failure 400,404 {object} object
 // @Router /{id} [get]
 func (t *TaskController) GetTask(c *gin.Context) {
-	idParam := c.Param("id")
+	idParam := c.Param("task_id")
 	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
@@ -107,7 +107,7 @@ func (t *TaskController) GetTask(c *gin.Context) {
 
 //DeleteTask : Deletes task
 func (t *TaskController) DeleteTask(c *gin.Context) {
-	idParam := c.Param("id")
+	idParam := c.Param("task_id")
 	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
@@ -127,7 +127,7 @@ func (t *TaskController) DeleteTask(c *gin.Context) {
 
 //UpdateTask : update by id
 func (t *TaskController) UpdateTask(ctx *gin.Context) {
-	idParam := ctx.Param("id")
+	idParam := ctx.Param("task_id")
 
 	id, err := strconv.ParseUint(idParam, 10, 64)
 

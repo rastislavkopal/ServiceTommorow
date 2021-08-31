@@ -22,13 +22,13 @@ func NewTaskRoute(c *controller.TaskController, h *common.GinRouter) TaskRoute {
 //Setup -> setups new tasks Routes
 func (t *TaskRoute) Setup() {
 
-	task := t.handler.Gin.Group("/workspace/:ws_id/task")
+	task := t.handler.Gin.Group("/workspace/:id/task")
 	{
 		task.GET("/", t.controller.GetTasks)
 		task.POST("/", t.controller.AddTask)
-		task.GET("/:id", t.controller.GetTask)
-		task.DELETE("/:id", t.controller.DeleteTask)
-		task.PUT("/:id", t.controller.UpdateTask)
+		task.GET("/:task_id", t.controller.GetTask)
+		task.DELETE("/:task_id", t.controller.DeleteTask)
+		task.PUT("/:task_id", t.controller.UpdateTask)
 	}
 
 }
