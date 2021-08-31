@@ -1,10 +1,13 @@
 import React, {useState} from 'react'
-import {Link} from "react-router-dom"
+import {Link, Redirect} from "react-router-dom"
+import { useCookies } from 'react-cookie';
 
 const Login = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [redirect, setRedirect] = useState(false)
+    const [cookies, setCookie] = useCookies(['jwt_token']);
 
     const submitLogin = async (e) => {
         e.preventDefault();
@@ -18,6 +21,30 @@ const Login = () => {
                 password,
             })
         })
+        .then(r => {
+            if (!r.ok) {
+                throw Error(r.statusText);
+            }
+            return r.json()
+        } )
+        .then(response => {
+            setCookie("jwt_token", response.Tokens.access_token,{
+                email: response.email,
+                expires_at: response.Tokens.at_expires,
+                creted_at: response.Tokens.CreatedAt,
+            })
+            console.log(cookies)
+            setRedirect(true);
+
+        }).catch(function(err) {
+            console.log("error: ");
+        });
+
+        
+    }
+
+    if (redirect) {
+        return <Redirect to="/dashboard" />
     }
 
     return (
