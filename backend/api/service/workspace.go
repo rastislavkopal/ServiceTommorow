@@ -5,6 +5,8 @@ import (
 	"backend/models"
 	"errors"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type WorkspaceService struct {
@@ -34,8 +36,15 @@ func (w *WorkspaceService) Save(ws *models.Workspace, user_id uint64) error {
 }
 
 // FindAll -> calls to workspaceRepository FindAll method
-func (w *WorkspaceService) FindAll(ws models.Workspace) (*[]models.Workspace, int64, error) {
-	return w.repository.FindAll()
+func (w *WorkspaceService) FindAll(ws models.Workspace, ctx *gin.Context) (*[]models.Workspace, int64, error) {
+
+	tokenDetails, error := ExtractTokenMetadata(ctx.Request)
+
+	if error != nil || tokenDetails.UserId == 0 {
+		return nil, 0, errors.New("User not allowed to access this resource -->" + error.Error())
+	}
+
+	return w.repository.FindAll(tokenDetails.UserId)
 }
 
 // Find -> calls to workspaceRepository Find method

@@ -43,6 +43,7 @@ type TokenDetails struct {
 	RefreshUuid  string `gorm:"size:40" json:"refresh_uuid"`
 	AtExpires    int64  `json:"at_expires"`
 	RtExpires    int64  `json:"rt_expires"`
+	UserId       uint64 `json:"user_id"`
 }
 
 // TableName for TokenDetails table model
@@ -60,6 +61,7 @@ func (tokenDetails *TokenDetails) ResponseMap() map[string]interface{} {
 	resp["refresh_uuid"] = tokenDetails.RefreshUuid
 	resp["at_expires"] = tokenDetails.AtExpires
 	resp["rt_expires"] = tokenDetails.RtExpires
+	resp["user_id"] = tokenDetails.UserId
 
 	return resp
 }

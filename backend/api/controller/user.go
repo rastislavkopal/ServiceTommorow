@@ -114,7 +114,7 @@ func (u *UserController) GetUsers(ctx *gin.Context) {
 	data, total, err := u.service.FindAll(users, keyword)
 
 	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find questions")
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find user")
 		return
 	}
 	respArr := make([]map[string]interface{}, 0, 0)

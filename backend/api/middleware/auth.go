@@ -33,3 +33,27 @@ func AuthRequired(ctx *gin.Context) {
 	// Continue down the chain to handler etc
 	ctx.Next()
 }
+
+// check if selected workspace id is allowed for user with ID from JWT token
+func WorkspaceUser(ctx *gin.Context) {
+	err := service.TokenValid(ctx.Request)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized to perform this action"})
+		return
+	}
+
+	acccessDetails, error := service.ExtractTokenMetadata(ctx.Request)
+
+	if error != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Could not extract Token metadata"})
+		return
+	}
+
+	if acccessDetails.UserId == 0 {
+		// check if UserId is allowed for workspace with ":id"
+	}
+
+	// Continue down the chain to handler etc
+	ctx.Next()
+}

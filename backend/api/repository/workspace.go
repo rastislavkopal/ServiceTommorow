@@ -20,11 +20,12 @@ func (w *WorkspaceRepository) Save(ws *models.Workspace) error {
 	return w.db.DB.Create(ws).Error
 }
 
-// FindAll -> Method for fetching all workspaces
-func (w *WorkspaceRepository) FindAll() (*[]models.Workspace, int64, error) {
+// FindAll -> Method for fetching all workspaces owned by user
+// UserID is extracted from Auth Bearer JWT token
+func (w *WorkspaceRepository) FindAll(user_id uint64) (*[]models.Workspace, int64, error) {
 	var workspaces []models.Workspace
 
-	result := w.db.DB.Find(&workspaces)
+	result := w.db.DB.Where("author_id = ?", user_id).Find(&workspaces)
 
 	return &workspaces, result.RowsAffected, result.Error
 }

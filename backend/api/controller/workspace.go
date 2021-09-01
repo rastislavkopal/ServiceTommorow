@@ -32,10 +32,10 @@ func (w *WorkspaceController) GetWorkspaces(ctx *gin.Context) {
 
 	// keyword := ctx.Query("keyword")
 
-	data, total, err := w.service.FindAll(workspaces)
+	data, total, err := w.service.FindAll(workspaces, ctx)
 
 	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find questions")
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to find workspace: "+err.Error())
 		return
 	}
 	respArr := make([]map[string]interface{}, 0, 0)
