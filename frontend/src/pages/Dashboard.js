@@ -1,5 +1,5 @@
 import React from 'react'
-import Workspace from "../components/Workspace";
+import WorkspacePanel from "../components/WorkspacePanel";
 import {Redirect} from "react-router-dom"
 
 
@@ -12,7 +12,7 @@ const Dashboard = () => {
     return (
         <div>
             <h1>Dashboard</h1>
-            <Workspace />
+            <WorkspacePanel />
         </div>
     )
 }

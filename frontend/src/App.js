@@ -5,14 +5,12 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Dashboard from './pages/Dashboard';
-import { CookiesProvider } from "react-cookie";
 
 require('dotenv').config()
 
 function App() {
 
   return (
-    <CookiesProvider>
       <div className="App">
         
         <BrowserRouter>
@@ -23,7 +21,6 @@ function App() {
           <Route path="/dashboard" component={Dashboard} />
         </BrowserRouter>
       </div>
-    </CookiesProvider>
   );
 }
 

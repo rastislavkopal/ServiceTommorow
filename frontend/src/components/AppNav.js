@@ -27,7 +27,7 @@ const AppNav = () => {
                         <Link to="/dashboard" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Dashboard</Link>
                     </li>
                     <li className="mr-3">
-                        <Link onClick={removeToken} className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Logout</Link>
+                        <Link to="/home" onClick={removeToken} className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Logout</Link>
                     </li>
                 </ul>
         )
