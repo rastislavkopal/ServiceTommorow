@@ -5,10 +5,19 @@ function Workspace() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
 
-    
     useEffect(() => {
-        fetch("/workspace")
-            .then(res => res.json())
+        fetch("/workspace",{
+            credentials: 'include',
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("jwt_token")
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw Error(res.statusText);
+                }
+                return res.json()
+            } )
             .then(
                 (result) => {
                     setIsLoaded(true);
@@ -20,7 +29,6 @@ function Workspace() {
                 }
             )
     }, [])
-
    
 
     if (error) {

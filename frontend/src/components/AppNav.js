@@ -2,8 +2,37 @@ import React from 'react';
 // import Register from "./Register";
 import {Link} from "react-router-dom"
 
+function removeToken() {
+    localStorage.removeItem("jwt_token");
+}
 
-function AppNav() {
+const AppNav = () => {
+
+    let menu;
+    if (!localStorage.getItem("jwt_token")) {
+        menu = (
+                <ul className="list-reset lg:flex justify-end flex-1 items-center">
+                    <li className="mr-3">
+                        <Link to="/login" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Log in</Link>
+                    </li>
+                    <li className="mr-3">
+                        <Link to="/register" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Register</Link>
+                    </li>
+                </ul>
+        )
+    } else {
+        menu = (
+            <ul className="list-reset lg:flex justify-end flex-1 items-center">
+                    <li className="mr-3">
+                        <Link to="/dashboard" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Dashboard</Link>
+                    </li>
+                    <li className="mr-3">
+                        <Link onClick={removeToken} className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Logout</Link>
+                    </li>
+                </ul>
+        )
+    }
+
     return (
         <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-6 w-full z-10 top-0">
             <div className="flex items-center flex-shrink-0 text-white mr-6">
@@ -19,14 +48,7 @@ function AppNav() {
             </div>
 
             <div className="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
-                <ul className="list-reset lg:flex justify-end flex-1 items-center">
-                    <li className="mr-3">
-                        <Link to="/login" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Log in</Link>
-                    </li>
-                    <li className="mr-3">
-                        <Link to="/register" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Register</Link>
-                    </li>
-                </ul>
+                {menu}
             </div>
         </nav>
     )

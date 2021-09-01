@@ -34,7 +34,7 @@ type TokenInterface interface {
 // CreateToken implements the TokenInterface
 // var _ TokenInterface = &TokenManager{}
 func CreateToken(userId uint64, userEmail string) (*models.TokenDetails, error) {
-	td := &models.TokenDetails{}
+	td := &models.TokenDetails{UserId: userId}
 	td.AtExpires = time.Now().Add(time.Minute * 30).Unix() //expires after 30 min
 	td.AccessUuid = uuid.NewV4().String()
 
