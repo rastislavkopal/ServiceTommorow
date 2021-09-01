@@ -39,18 +39,27 @@ func (u *UserController) RegisterUser(ctx *gin.Context) {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Email is required")
 		return
 	}
+	if user.FullName == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Name is required")
+		return
+	}
 	if user.PasswordHash == "" {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Password is required")
 		return
 	}
 
-	err := u.service.Register(user)
+	err := u.service.Register(&user)
 
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create user")
 		return
 	}
-	util.SuccessJSON(ctx, http.StatusCreated, "Successfully Registered User")
+	ctx.JSON(http.StatusCreated, gin.H{
+		"msg":      "Successfully Registered User",
+		"email":    user.Email,
+		"fullname": user.FullName,
+		"id":       user.ID,
+	})
 }
 
 // LoginUsersterUser -> Login user with credentials
@@ -84,7 +93,7 @@ func (u *UserController) LoginUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusCreated, gin.H{
 		"email":  user.Email,
 		"Tokens": tokenDetails,
 	})
@@ -129,15 +138,11 @@ func (u *UserController) AddUser(ctx *gin.Context) {
 	var user models.User
 	ctx.ShouldBindJSON(&user)
 
-	if user.FirstName == "" {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "FirstName is required")
+	if user.FullName == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Name is required")
 		return
 	}
-	if user.LastName == "" {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "LastName is required")
-		return
-	}
-	err := u.service.Save(user)
+	err := u.service.Save(&user)
 	if err != nil {
 		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create user")
 		return
@@ -155,7 +160,7 @@ func (u *UserController) AddUser(ctx *gin.Context) {
 // @Router /{id} [get]
 func (u *UserController) GetUser(c *gin.Context) {
 	idParam := c.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to int64
+	id, err := strconv.ParseUint(idParam, 10, 64) //type conversion string to uint64
 	if err != nil {
 		util.ErrorJSON(c, http.StatusBadRequest, "id invalid")
 		return
@@ -217,12 +222,8 @@ func (u *UserController) UpdateUser(ctx *gin.Context) {
 	}
 	ctx.ShouldBindJSON(&userRecord)
 
-	if userRecord.FirstName == "" {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "FirstName is required")
-		return
-	}
-	if userRecord.LastName == "" {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "LastName is required")
+	if userRecord.FullName == "" {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Name is required")
 		return
 	}
 

@@ -31,6 +31,7 @@ function Workspace() {
         console.log(items)
         return (
             <div>
+                <h1>Workspaces:</h1>
                 <ul>
                     {items.map(item => (
                         <li key={item.id}>

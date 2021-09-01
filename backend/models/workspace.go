@@ -6,9 +6,9 @@ import "gorm.io/gorm"
 type Workspace struct {
 	gorm.Model
 	ID             uint64 `json:"id" gorm:"primary_key;auto_increment"`
-	Title          string `json:"title" gorm:"size:50"`
+	Title          string `json:"title" gorm:"size:50" binding:"required"`
 	Description    string `json:"description" gorm:"size:250"`
-	Author         User   `json:"author" gorm:"foreignKey:AuthorID"`
+	Author         User   `json:"author" gorm:"foreignKey:AuthorID" binding:"required,dive"`
 	AuthorID       uint64 `json:"-"`
 	WorkspaceUsers []User `json:"workspace_users,omitempty" gorm:"many2many:workspace_users"`
 }
@@ -25,7 +25,7 @@ func (ws *Workspace) ResponseMap() map[string]interface{} {
 	resp["id"] = ws.ID
 	resp["title"] = ws.Title
 	resp["description"] = ws.Description
-	resp["user_id"] = ws.Author.ID
+	resp["author_id"] = ws.AuthorID
 	// resp["workspace_users"] = ws.
 
 	return resp

@@ -4,6 +4,7 @@ import (
 	"backend/api/repository"
 	"backend/models"
 	"errors"
+	"strconv"
 )
 
 type WorkspaceService struct {
@@ -20,12 +21,11 @@ func NewWorkspaceService(r *repository.WorkspaceRepository, u *repository.UserRe
 
 // Save -> calls workspaceRepository save method
 func (w *WorkspaceService) Save(ws *models.Workspace, user_id uint64) error {
-	var user models.User
-	user.ID = user_id
+	user := models.User{ID: user_id}
 
 	foundUser, err := w.userRepo.Find(user)
 	if err != nil {
-		return errors.New("could not find Workspace")
+		return errors.New("could not find User ID: " + strconv.Itoa(int(user_id)))
 	}
 
 	ws.Author = foundUser

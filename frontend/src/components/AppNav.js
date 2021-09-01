@@ -21,10 +21,10 @@ function AppNav() {
             <div className="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden lg:block pt-6 lg:pt-0" id="nav-content">
                 <ul className="list-reset lg:flex justify-end flex-1 items-center">
                     <li className="mr-3">
-                        <Link to="/login" className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4">Log in</Link>
+                        <Link to="/login" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Log in</Link>
                     </li>
                     <li className="mr-3">
-                        <Link to="/register" className="inline-block text-gray-600 no-underline hover:text-gray-200 hover:text-underline py-2 px-4">Register</Link>
+                        <Link to="/register" className="inline-block text-green-600 no-underline hover:text-green-700 hover:text-underline font-bold py-2 px-4">Register</Link>
                     </li>
                 </ul>
             </div>

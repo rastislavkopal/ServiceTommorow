@@ -34,7 +34,7 @@ func checkPasswordHash(password string, hash string) bool {
 }
 
 // Register -> hashes password and calls user repo save method
-func (u *UserService) Register(user models.User) error {
+func (u *UserService) Register(user *models.User) error {
 	hashedPwd, err := hashPassword(user.PasswordHash)
 
 	if err != nil {
@@ -57,7 +57,7 @@ func (u *UserService) Login(user models.User) (*models.TokenDetails, error) {
 		return nil, errors.New("Incorrect password")
 	}
 
-	tokenDetails, err := CreateToken(dbUser.ID, "username")
+	tokenDetails, err := CreateToken(dbUser.ID, user.FullName)
 
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (u *UserService) Login(user models.User) (*models.TokenDetails, error) {
 }
 
 // Save -> calls user repository save method
-func (u *UserService) Save(user models.User) error {
+func (u *UserService) Save(user *models.User) error {
 	return u.repository.Save(user)
 }
 

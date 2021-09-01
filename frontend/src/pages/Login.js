@@ -70,7 +70,7 @@ const Login = () => {
                 </div>
 
                 <div className="text-grey-dark mt-6">
-                    Do not have an account yet?  
+                    Do not have an account yet?  &nbsp;
                     <Link to="/register" className="no-underline border-b border-blue text-blue">
                         Sign up
                     </Link>.

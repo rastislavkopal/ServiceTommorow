@@ -71,24 +71,25 @@ func (w *WorkspaceController) CreateWorkspace(ctx *gin.Context) {
 	}
 
 	// user_id, err := strconv.ParseUint(ctx.PostForm("user_id"), 10, 64)
-	// if err != nil {
-	// 	util.ErrorJSON(ctx, http.StatusBadRequest, "user_id is required")
-	// 	return
-	// }
-
-	err := w.service.Save(&ws, ws.AuthorID)
-
-	if err != nil {
-		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create workspace")
+	if ws.Author.ID == 0 {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "user_id is required")
 		return
 	}
 
-	ctx.JSON(http.StatusOK, &util.Response{
-		Success: true,
-		Message: "Successfully created new workspace",
-		Data: map[string]interface{}{
-			"workspace_id": ws.ID,
-		}})
+	err := w.service.Save(&ws, ws.Author.ID)
+
+	if err != nil {
+		util.ErrorJSON(ctx, http.StatusBadRequest, "Failed to create workspace: "+err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, gin.H{
+		"msg":          "Successfully created new workspace",
+		"workspace_id": ws.ID,
+		"author_id":    ws.AuthorID,
+		"title":        ws.Title,
+		"description":  ws.Description,
+	})
 }
 
 // GetWorkspace -> get workspace by id

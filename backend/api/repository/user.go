@@ -18,8 +18,8 @@ func NewUserRepository(db *common.Database) UserRepository {
 }
 
 // Save -> method for saving user into DB
-func (u *UserRepository) Save(user models.User) error {
-	return u.db.DB.Create(&user).Error
+func (u *UserRepository) Save(user *models.User) error {
+	return u.db.DB.Create(user).Error
 }
 
 // FindAll -> Method for fetching all users from db
@@ -29,11 +29,11 @@ func (u *UserRepository) FindAll(user models.User, keyword string) (*[]models.Us
 
 	queryBuilder := u.db.DB.Order("created_at desc").Model(&models.User{})
 
-	// search param -> first_name
+	// search param -> fullname
 	if keyword != "" {
 		queryWord := "%" + keyword + "%"
 		queryBuilder = queryBuilder.Where(
-			u.db.DB.Where("user.first_name LIKE ? ", queryWord))
+			u.db.DB.Where("user.fullname LIKE ? ", queryWord))
 
 	}
 	err := queryBuilder.Where(user).Find(&users).Count(&totalRows).Error
